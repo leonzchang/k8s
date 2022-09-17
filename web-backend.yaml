@@ -1,0 +1,67 @@
+apiVersion: app/v1
+kind: Deployment
+metadata:
+  name: web-backend-deployment
+  # kind's label one is optional
+  labels:
+    app: web-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-backend
+  template:
+    matadata:
+    # template label is required, replicas will need it
+    labels:
+      app: web-backend
+    spec:
+      container:
+      - name: web-backend
+        image: web-backend docker image
+        ports:
+        - containerPort: 3000
+        # setting env from `secret`
+        env:
+        - name: PG_USER_NAME
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: postgres-user
+        - name: PG_USER_PWD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: postgres-pwd
+        - name: PG_DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: postgres-db
+        # setting env from config
+        - name: PG_DB_URL
+          valueFrom:
+            configMapKeyRef:
+              name: postgres-config
+              key: postgres-url
+
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-backend-service
+spec:
+  # type default is ClusterIP which means internal service ip, NodePort is for external
+  type: NodePort
+  selector:
+    app: web-backend
+  port:
+    - protocol: TCP
+      port: 3000
+      # export the port to let others pod in the same node can connect
+      targetPort: 3000
+      # range in 30000-32767
+      NodePort: 30000
