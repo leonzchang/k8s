@@ -1,4 +1,4 @@
-apiVersion: app/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: web-backend-deployment
@@ -11,14 +11,14 @@ spec:
     matchLabels:
       app: web-backend
   template:
-    matadata:
-    # template label is required, replicas will need it
-    labels:
-      app: web-backend
+    metadata:
+      # template label is required, replicas will need it
+      labels:
+        app: web-backend
     spec:
-      container:
+      containers:
       - name: web-backend
-        image: web-backend docker image
+        image: leonzchang/dragonstack-api:latest
         ports:
         - containerPort: 3000
         # setting env from `secret`
@@ -58,10 +58,10 @@ spec:
   type: NodePort
   selector:
     app: web-backend
-  port:
+  ports:
     - protocol: TCP
       port: 3000
       # export the port to let others pod in the same node can connect
       targetPort: 3000
       # range in 30000-32767
-      NodePort: 30000
+      nodePort: 30001

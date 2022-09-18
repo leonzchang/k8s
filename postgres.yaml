@@ -1,4 +1,4 @@
-apiVersion: app/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres-deployment
@@ -10,13 +10,13 @@ spec:
     matchLabels:
       app: postgres
   template:
-    matadata:
-    labels:
-      app: postgres
+    metadata:
+      labels:
+        app: postgres
     spec:
-      container:
+      containers:
       - name: postgres
-        image: postgres:latest
+        image: leonzchang/dragonstack-pg:latest
         ports:
         - containerPort: 5432
         env:
@@ -45,7 +45,7 @@ metadata:
 spec:
   selector:
     app: postgres
-  port:
+  ports:
     - protocol: TCP
       port: 5432
       targetPort: 5432
