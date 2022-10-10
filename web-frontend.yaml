@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-frontend-deployment
+  # kind's label one is optional
+  labels:
+    app: web-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-frontend
+  template:
+    metadata:
+      # template label is required, replicas will need it
+      labels:
+        app: web-frontend
+    spec:
+      containers:
+      - name: web-frontend
+        image: leonzchang/
+        ports:
+        - containerPort: 1234
+        env:
+        # setting env from config
+        - name: BACKEND_URL
+          valueFrom:
+            configMapKeyRef:
+              name: service-config
+              key: backend-url
+        - name: BACKEND_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: service-config
+              key: backend-port
+
+
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-frontend-service
+spec:
+  # type default is ClusterIP which means internal service ip, NodePort is for external
+  type: NodePort
+  selector:
+    app: web-frontend
+  ports:
+    - protocol: TCP
+      port: 1234
+      # export the port to let others pod in the same node can connect
+      targetPort: 1234
+      # range in 30000-32767
+      nodePort: 30002

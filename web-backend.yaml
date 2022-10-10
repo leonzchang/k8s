@@ -42,10 +42,23 @@ spec:
         - name: PG_DB_URL
           valueFrom:
             configMapKeyRef:
-              name: postgres-config
+              name: service-config
               key: postgres-url
-
-
+        - name: 
+          valueFrom: PG_DB_PORT
+            configMapKeyRef:
+              name: service-config
+              key: postgres-port
+        - name: 
+          valueFrom: FRONTEND_URL
+            configMapKeyRef:
+              name: service-config
+              key: frontend-url
+        - name: 
+          valueFrom: FRONTEND_PORT
+            configMapKeyRef:
+              name: service-config
+              key: frontend-port
 
 ---
 

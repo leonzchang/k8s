@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: service-config
+data:
+  postgres-url: postgres-service
+  postgres-port: 5432
+  backend-url: web-backend-service
+  backend-port: 3000
+  frontend-url: web-frontend-service
+  fronend-port: 1234
+
